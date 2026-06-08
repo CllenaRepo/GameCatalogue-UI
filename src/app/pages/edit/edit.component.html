@@ -1,0 +1,101 @@
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+
+    <div class="d-flex align-items-center mb-4">
+      <a routerLink="/games" class="btn btn-outline-secondary btn-sm me-3">← Back</a>
+      <h2 class="mb-0">{{ isNew() ? 'Add New Game' : 'Edit Game' }}</h2>
+    </div>
+
+    @if (loading()) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+    }
+
+    @if (error()) {
+      <ngb-alert type="danger" (closed)="error.set(null)">{{ error() }}</ngb-alert>
+    }
+
+    @if (!loading()) {
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <form #gameForm="ngForm" (ngSubmit)="gameForm.valid && save()">
+
+            <!-- Title -->
+            <div class="mb-3">
+              <label for="title" class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+              <input id="title" name="title" type="text" class="form-control"
+                     [(ngModel)]="game.title" required maxlength="200"
+                     #title="ngModel"
+                     [class.is-invalid]="title.invalid && title.touched" />
+              @if (title.invalid && title.touched) {
+                <div class="invalid-feedback">Title is required.</div>
+              }
+            </div>
+
+            <!-- Genre & Platform -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="genre" class="form-label fw-semibold">Genre <span class="text-danger">*</span></label>
+                <select id="genre" name="genre" class="form-select"
+                        [(ngModel)]="game.genre" required
+                        #genre="ngModel"
+                        [class.is-invalid]="genre.invalid && genre.touched">
+                  <option value="">— Select genre —</option>
+                  @for (g of genres; track g) {
+                    <option [value]="g">{{ g }}</option>
+                  }
+                </select>
+                @if (genre.invalid && genre.touched) {
+                  <div class="invalid-feedback">Genre is required.</div>
+                }
+              </div>
+              <div class="col-md-6">
+                <label for="platform" class="form-label fw-semibold">Platform <span class="text-danger">*</span></label>
+                <input id="platform" name="platform" type="text" class="form-control"
+                       [(ngModel)]="game.platform" required maxlength="100"
+                       #platform="ngModel"
+                       [class.is-invalid]="platform.invalid && platform.touched" />
+                @if (platform.invalid && platform.touched) {
+                  <div class="invalid-feedback">Platform is required.</div>
+                }
+              </div>
+            </div>
+
+            <!-- Release Year & Developer-->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="releaseYear" class="form-label fw-semibold">Release Year <span class="text-danger">*</span></label>
+                <input id="releaseYear" name="releaseYear" type="number" class="form-control"
+                       [(ngModel)]="game.releaseYear" required min="1972" [max]="currentYear"
+                       #year="ngModel"
+                       [class.is-invalid]="year.invalid && year.touched" />
+                @if (year.invalid && year.touched) {
+                  <div class="invalid-feedback">Enter a valid release year.</div>
+                }
+              </div>
+              <div class="col-md-6">
+                <label for="developer" class="form-label fw-semibold">Developer <span class="text-danger">*</span></label>
+                <input id="developer" name="developer" type="text" class="form-control"
+                       [(ngModel)]="game.developer" maxlength="100" />
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="saving()">
+                @if (saving()) {
+                  <span class="spinner-border spinner-border-sm me-1"></span>
+                }
+                {{ isNew() ? 'Create Game' : 'Save Changes' }}
+              </button>
+              <a routerLink="/games" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

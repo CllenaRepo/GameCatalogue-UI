@@ -1,0 +1,16 @@
+@use 'bootstrap/scss/bootstrap';
+
+body {
+  background-color: #f8f9fa;
+}
+
+.rating-badge {
+  font-size: 0.85rem;
+}
+
+.game-card {
+  transition: box-shadow 0.2s ease;
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+}
